@@ -6,8 +6,9 @@
 				top: 332px;
 				left:80px;
 				z-index:5;
-				width:150px; 
-				height:100px; 
+				
+				transform: rotate(10deg);
+			
 			
 			}
 			body{
@@ -40,34 +41,33 @@
 		</style>
 		
 		<script >
-			//alec
-			function physics(){
 			
-			}
 			
 			function fall(obj){
-				orgSpot = parseInt(getTheStyle(obj.id, 'top'));
+				var orgSpot = parseInt(getTheStyle(obj.id, 'top'));
 				obj.style.top = orgSpot + 1.75 + "px";
 
 			}
 			function jump(obj){
-				
-				orgSpot = parseInt(getTheStyle(obj.id, 'top'));
+				//rotateTimer = setInerval(function(){rotateObj(divBird);},10);
+				resetBirdAngle(obj);
+				var orgSpot = parseInt(getTheStyle(obj.id, 'top'));
 				obj.style.top = orgSpot - 15 + "px";
 				//console.log("jump");
+				
 			}
-			
+			function resetBirdAngle(obj){
+				clearInterval(rotateTimer);
+				divBird.style.transform = 'rotate(-60deg)';
+				rotateTimer = setInterval(function(){rotateObj(divBird);},10);
+			}
 			function getTheStyle(id,styleProperty){
 				var elem = document.getElementById(id);
 				var theCSSprop = window.getComputedStyle(elem,null).getPropertyValue(styleProperty);
 			//  alert(theCSSprop);
 				return theCSSprop;
 			}
-			function Animate(elem){
-				console.log(elem);
-				clearInterval(Timer);
-				Timer = setInterval(function(){MoveRightAndUp(elem,'rightWall');}, 100);
-			}
+			
 			function handleKeyDown(e) { // *** add missing function calls ***
 				//	document.getElementById('keyDisplay').innerHTML = e.keyCode;//show key code
 				console.log(e.keyCode);
@@ -96,20 +96,41 @@
 			
 			
 			}
-			var divBird;
+			function rotateObj(obj){
+				var transformProp = divBird.style.transform;
+				var ogDeg = parseInt(transformProp.substring(7,transformProp.length-4));
+				var rate = 2;
+				if(ogDeg > 20){
+					rate = 4;
+				}
+				divBird.style.transform = 'rotate(' + (ogDeg + rate) + 'deg)';
+				if(ogDeg + rate > 60){
+					clearInterval(rotateTimer);
+				}
+				
+			}
+			// 0,1,2,3
+			//bird element, vertical velocity, height, birdAngle
+			
+			var birdData = [document.getElementById("bird"),25, parseInt(getTheStyle(obj.id, 'top'))];
 			var birdTimer;
 			var wallTimer
+			var rotateTimer;
 			var firstPress = true;
+		
 			window.onload = function(){
 				document.getElementById("myAudio").play();
-				divBird = document.getElementById("bird");
+			
 				clearInterval(birdTimer);
 				birdTimer = setInterval(function(){fall(document.getElementById("bird"));},25);
 				clearInterval(wallTimer);
 				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("obstacle"));},25);
-				
+				clearInterval(rotateTimer);
+				rotateTimer = setInterval(function(){rotateObj(divBird);},10);
 				window.addEventListener("keydown", handleKeyDown);
 				window.addEventListener("keyup", handleRelease);
+	
+				
 			}	
 	
 		</script>
