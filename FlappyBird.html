@@ -1,3 +1,5 @@
+<!--increase size when eating a pipe
+-->
 <html>
 	<head>
 		<style>
@@ -6,8 +8,9 @@
 				top: 332px;
 				left:80px;
 				z-index:5;
-				width:150px; 
-				height:100px; 
+				
+				transform: rotate(10deg);
+			
 			
 			}
 			body{
@@ -40,39 +43,52 @@
 		</style>
 		
 		<script >
-			//alec
-			function physics(){
 			
-			}
 			
-			function fall(obj){
-				orgSpot = parseInt(getTheStyle(obj.id, 'top'));
-				obj.style.top = orgSpot + 1.75 + "px";
+			function fall(bdata){
+				
+				var orgSpot = parseInt(getTheStyle(bdata[0].id, 'top'));
+				if(!(bdata[1] == bdata[4])){
+				
+					bdata[1] = bdata[1] + bdata[2];
+					
+					if(bdata[1] >= bdata[4]){
+						bdata[1] = bdata[4];
+					}
+				}
+			//	console.log(bdata[1]);
+			//	console.log(bdata[1]);
+				
+				bdata[0].style.top = orgSpot + bdata[1] + "px";
+				
 
 			}
-			function jump(obj){
+			function jump(bdata){
 				
-				orgSpot = parseInt(getTheStyle(obj.id, 'top'));
-				obj.style.top = orgSpot - 15 + "px";
-				//console.log("jump");
+				resetBirdAngle(bdata[0]);
+			//	console.log(bdata[1]);
+			 	bdata[1] = -8;
+			//	console.log(birdData[1]);
+			//	console.log(bdata[1]);
+				
 			}
-			
+			function resetBirdAngle(obj){
+				clearInterval(rotateTimer);
+				birdData[0].style.transform = 'rotate(-60deg)';
+				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
+			}
 			function getTheStyle(id,styleProperty){
 				var elem = document.getElementById(id);
 				var theCSSprop = window.getComputedStyle(elem,null).getPropertyValue(styleProperty);
-			//  alert(theCSSprop);
+		
 				return theCSSprop;
 			}
-			function Animate(elem){
-				console.log(elem);
-				clearInterval(Timer);
-				Timer = setInterval(function(){MoveRightAndUp(elem,'rightWall');}, 100);
-			}
+			
 			function handleKeyDown(e) { // *** add missing function calls ***
 				//	document.getElementById('keyDisplay').innerHTML = e.keyCode;//show key code
-				console.log(e.keyCode);
+				//console.log(e.keyCode);
 				if(e.keyCode == 32 && firstPress){
-					jump(divBird);
+					jump(birdData);
 					firstPress = false;
 				}
 				onkeydown = null;
@@ -88,28 +104,53 @@
 				
 				for(var i = 0; i < obstacles.length; i++){
 					var wallOgLoc = parseInt(getTheStyle(obstacles[i].id,'left'));
-					obstacles[i].style.left = wallOgLoc - 1 + "px";
+					obstacles[i].style.left = wallOgLoc - 3 + "px";
+					if(wallOgLoc - 1 < 0){
+						obstacles[i].style.left = window.innerWidth;
+					}
+					
 				}
 			
 			}
-			function moveLeft(){
-			
-			
+		
+			function rotateObj(obj){
+				obj = birdData[0];
+				var transformProp = obj.style.transform;
+				var ogDeg = parseInt(transformProp.substring(7,transformProp.length-4));
+				var rate = 2;
+				if(ogDeg > 20){
+					rate = 4;
+				}
+				obj.style.transform = 'rotate(' + (ogDeg + rate) + 'deg)';
+				if(ogDeg + rate >45){
+				//	console.log(ogDeg);
+					clearInterval(rotateTimer);
+				}
+				
 			}
-			var divBird;
+			// 0			,1,					2,					 3		4
+			//bird element, vertical velocity, vertical acceleration, height, terminal velocity 
+			
+			var birdData = ["bird",-5, 1, 0, 7]; 
 			var birdTimer;
 			var wallTimer
+			var rotateTimer;
 			var firstPress = true;
+			
 			window.onload = function(){
+				birdData[0] = document.getElementById("bird");
 				document.getElementById("myAudio").play();
-				divBird = document.getElementById("bird");
+				birdData[3] = parseInt(getTheStyle(birdData[0].id, 'top'));
 				clearInterval(birdTimer);
-				birdTimer = setInterval(function(){fall(document.getElementById("bird"));},25);
+				birdTimer = setInterval(function(){fall(birdData);},25);
 				clearInterval(wallTimer);
 				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("obstacle"));},25);
-				
+				clearInterval(rotateTimer);
+				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
 				window.addEventListener("keydown", handleKeyDown);
 				window.addEventListener("keyup", handleRelease);
+	
+				
 			}	
 	
 		</script>
