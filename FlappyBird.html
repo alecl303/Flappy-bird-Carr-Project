@@ -43,7 +43,9 @@
 		</style>
 		
 		<script >
+			function pause(){
 			
+			}
 			
 			function fall(bdata){
 				
@@ -136,7 +138,7 @@
 			var wallTimer
 			var rotateTimer;
 			var firstPress = true;
-			
+			var timers = [birdTimer,wallTimer,rotateTimer];
 			window.onload = function(){
 				birdData[0] = document.getElementById("bird");
 				document.getElementById("myAudio").play();
@@ -157,6 +159,7 @@
 	</head>
 	
 	<body>
+		<input type = button onclick = "pause()">
 		<audio id="myAudio">
 			<source src="song.mp3" type="audio/mp3">
 		</audio>
