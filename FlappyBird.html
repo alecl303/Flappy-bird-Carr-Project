@@ -1,4 +1,10 @@
 <!--increase size when eating a pipe
+#wall3{
+				top: 0px;
+				left:900px;
+				height:60%
+				position:absolute;
+			}
 -->
 <html>
 	<head>
@@ -8,61 +14,55 @@
 				top: 332px;
 				left:80px;
 				z-index:5;
-				
 				transform: rotate(10deg);
-			
-			
 			}
 			body{
-			
-				
 				background-color: green;
 			}
 			.obstacle{
 				position:absolute;
 				top: 500px;
 				left:500px;
-				width:150px; 
-				height:470px; 
+				width:150px;
 				overflow: hidden;
-				background-color: black;
+				background-color: white;
 			}
 			#wall1{
-				top: 500px;
+				top: 0px;
 				left:500px;
+				height:60%;
+				position:absolute;
 			}
 			#wall2{
-				top: 300px;
-				left:1000px;
+				top: 0px;
+				left:800px;
+				height:30%;
+				position:absolute;
 			}
 			#wall3{
-				top: 500px;
-				left:700px;
+				top::0px;
+				left:500px;
+				height:30%;
+				position:absolute;
+			}
+		
+			#wall4{
+				top::0px;
+				left:800px;
+				height:30%;
+				position:absolute;
 			}
 			
 		</style>
 		
 		<script >
-			function pause(elem, t){
-			//	t = timers;
-				if(elem.value == "Pause"){
-					elem.value = "Resume";
-					for(var i = 0; i < t.length; i++){
-						console.log(t.length);
-						clearInterval(t[i]);
-					
-					}					
-				}else if(elem.value == "Resume"){
-					elem.value = "Pause";
-					startMoving();
-				}
-			}
+			
 			
 			function fall(bdata){
 				
 				var orgSpot = parseInt(getTheStyle(bdata[0].id, 'top'));
 				if(!(bdata[1] == bdata[4])){
-					
+				
 					bdata[1] = bdata[1] + bdata[2];
 					
 					if(bdata[1] >= bdata[4]){
@@ -75,6 +75,17 @@
 				bdata[0].style.top = orgSpot + bdata[1] + "px";
 				
 
+			}
+			function wallgenertator(){
+				var height1 = (parseInt(Math.random() * 65) + 5);
+				var height2 = 90 - height1;
+				var height3 = (parseInt(Math.random() * 65) + 5);
+				var height5 = 90 - height3;
+				document.getElementById("wall1").style.height = height1 + "%";
+				document.getElementById("wall2").style.height = height2 +"%";
+				document.getElementById("wall3").style.height = height3 + "%";
+				document.getElementById("wall4").style.height = height4 +"%";
+				
 			}
 			function jump(bdata){
 				
@@ -89,7 +100,6 @@
 				clearInterval(rotateTimer);
 				birdData[0].style.transform = 'rotate(-60deg)';
 				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
-				timers[2] = rotateTimer;
 			}
 			function getTheStyle(id,styleProperty){
 				var elem = document.getElementById(id);
@@ -101,7 +111,7 @@
 			function handleKeyDown(e) { // *** add missing function calls ***
 				//	document.getElementById('keyDisplay').innerHTML = e.keyCode;//show key code
 				//console.log(e.keyCode);
-				if(e.keyCode == 32 && firstPress && document.getElementById("pauseBut").value == "Pause"){
+				if(e.keyCode == 32 && firstPress){
 					jump(birdData);
 					firstPress = false;
 				}
@@ -118,7 +128,7 @@
 				
 				for(var i = 0; i < obstacles.length; i++){
 					var wallOgLoc = parseInt(getTheStyle(obstacles[i].id,'left'));
-					obstacles[i].style.left = wallOgLoc - 3 + "px";
+					obstacles[i].style.left = wallOgLoc - 4 + "px";
 					if(wallOgLoc - 1 < 0){
 						obstacles[i].style.left = window.innerWidth;
 					}
@@ -144,13 +154,14 @@
 			}
 			// 0			,1,					2,					 3		4
 			//bird element, vertical velocity, vertical acceleration, height, terminal velocity 
-			function startMoving(){
-				birdTimer = setInterval(function(){fall(birdData);},25);
-				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("obstacle"));},25);
-				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
-				timers = [birdTimer,wallTimer,rotateTimer];
-			}
-			function initalize(){
+			
+			var birdData = ["bird",-5, 1, 0, 7]; 
+			var birdTimer;
+			var wallTimer
+			var rotateTimer;
+			var firstPress = true;
+			
+			window.onload = function(){
 				birdData[0] = document.getElementById("bird");
 				document.getElementById("myAudio").play();
 				birdData[3] = parseInt(getTheStyle(birdData[0].id, 'top'));
@@ -162,40 +173,32 @@
 				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
 				window.addEventListener("keydown", handleKeyDown);
 				window.addEventListener("keyup", handleRelease);
-				timers = [birdTimer,wallTimer,rotateTimer];
-			
-			}
-			var birdData = ["bird",-5, 1, 0, 7]; 
-			var birdTimer;
-			var wallTimer
-			var rotateTimer;
-			var firstPress = true;
-			var timers;
-			window.onload = function(){
-				initalize();
-				
-				
+	
+				wallgenertator();
 			}	
 	
 		</script>
 	</head>
 	
 	<body>
-		<input id = "pauseBut" type = button  value = "Pause" onclick = "pause(this, timers)">
+	
 		<audio id="myAudio">
 			<source src="song.mp3" type="audio/mp3">
 		</audio>
-		<div id = "bird" class = "player" >
+		<div id = "bird" class = "player">
 			<img src = "yellowbird-midflap.png">
 		</div>
 		<div id = "wall1" class = "obstacle">
-			
+			1
 		</div>
 		<div id = "wall2" class = "obstacle">
-			
+			2
 		</div>
 		<div id = "wall3" class = "obstacle">
-			
+			3
+		</div>
+		<div id = "wall4" class = "obstacle">
+			4
 		</div>
 	</body>
 </html>
