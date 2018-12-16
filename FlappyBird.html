@@ -7,39 +7,48 @@
 				position:absolute;
 				top: 332px;
 				left:80px;
-				z-index:5;
 				
 				transform: rotate(10deg);
-			
-			
 			}
 			body{
-			
-				
 				background-color: green;
+				overflow: hidden;
 			}
 			.obstacle{
 				position:absolute;
-				top: 500px;
-				left:500px;
-				width:150px; 
-				height:470px; 
+				width: 100px;
 				overflow: hidden;
-				background-color: black;
+				background-color: white;
 			}
-			#wall1{
-				top: 500px;
-				left:500px;
+			#walltop1{
+				top:0px;
 			}
-			#wall2{
-				top: 300px;
+			#wallbot1{
+				top:700px;
+			}
+			#walltop2{
+				top:0px;
+			}
+			#wallbot2{
+				top:700px;
+			}
+			.column{
+				
+				height: 100%;
+	
+				position: absolute;
+			}
+			#wrapper1{
+				left:600px;
+			}
+			#wrapper2{
+				
 				left:1000px;
-			}
-			#wall3{
-				top: 500px;
-				left:700px;
-			}
 			
+			}
+			#pauseBut{
+				position: absolute;
+			}
 		</style>
 		
 		<script >
@@ -114,17 +123,20 @@
 			}
 			//alec
 			
+			
 			function moveWalls(obstacles){
 				
 				for(var i = 0; i < obstacles.length; i++){
 					var wallOgLoc = parseInt(getTheStyle(obstacles[i].id,'left'));
-					obstacles[i].style.left = wallOgLoc - 3 + "px";
+					obstacles[i].style.left = wallOgLoc - 4 + "px";
 					if(wallOgLoc - 1 < 0){
 						obstacles[i].style.left = window.innerWidth;
+						wallgenertator(obstacles[i].id.substring(obstacles[i].id.length-1));
 					}
 					
+					
 				}
-			
+				
 			}
 		
 			function rotateObj(obj){
@@ -142,11 +154,23 @@
 				}
 				
 			}
+			function wallgenertator(wrapperNum){
+				var height1 = (parseInt(Math.random() * 65) + 5);
+				var height2 = 90 - height1;
+			
+				document.getElementById("walltop" + wrapperNum).style.height = height1 + "%";
+				document.getElementById("wallbot" + wrapperNum).style.height = height2 +"%";
+				console.log(height1 + " " + height2);
+			//	document.getElementById("wallbot" + wrapperNum).style.width = "100px";
+				document.getElementById("wallbot" + wrapperNum ).style.top = (100 - height2) + "%" ;
+			
+				
+			}
 			// 0			,1,					2,					 3		4
 			//bird element, vertical velocity, vertical acceleration, height, terminal velocity 
 			function startMoving(){
 				birdTimer = setInterval(function(){fall(birdData);},25);
-				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("obstacle"));},25);
+				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("column"));},25);
 				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
 				timers = [birdTimer,wallTimer,rotateTimer];
 			}
@@ -157,7 +181,7 @@
 				clearInterval(birdTimer);
 				birdTimer = setInterval(function(){fall(birdData);},25);
 				clearInterval(wallTimer);
-				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("obstacle"));},25);
+				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("column"));},8);
 				clearInterval(rotateTimer);
 				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
 				window.addEventListener("keydown", handleKeyDown);
@@ -182,19 +206,31 @@
 	
 	<body>
 		<input id = "pauseBut" type = button  value = "Pause" onclick = "pause(this, timers)">
-		<audio id="myAudio">
+				<audio id="myAudio">
 			<source src="song.mp3" type="audio/mp3">
 		</audio>
-		<div id = "bird" class = "player" >
+		<div id = "bird" class = "player">
 			<img src = "yellowbird-midflap.png">
 		</div>
-		<div id = "wall1" class = "obstacle">
-			
+		<div id = "wrapper1" class = "column">
+			<div id = "walltop1" class = "obstacle">
+				1
+			</div>
+			<div id = "wallbot1" class = "obstacle">
+				2
+			</div>
 		</div>
-		<div id = "wall2" class = "obstacle">
+		
+		
+		<div id = "wrapper2"  class = "column">
 			
+			<div id = "walltop2" class = "obstacle">
+				3
+			</div>
+			<div id = "wallbot2" class = "obstacle">
+				4
+			</div>
 		</div>
-		<div id = "wall3" class = "obstacle">
 			
 		</div>
 	</body>
