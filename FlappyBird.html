@@ -1,4 +1,23 @@
 <!--increase size when eating a pipe
+#wall3{
+				top: 0px;
+				left:900px;
+				height:60%
+				position:absolute;
+			}
+.obstacle{
+				position:absolute;
+				top: 500px;
+				left:500px;
+				width:100px;
+				overflow: hidden;
+				background-color: white;
+			}
+			#wall2{
+				top:500px;
+				height:350px;
+				position:absolute;
+			}
 -->
 <html>
 	<head>
@@ -7,62 +26,56 @@
 				position:absolute;
 				top: 332px;
 				left:80px;
-				z-index:5;
 				
 				transform: rotate(10deg);
-			
-			
 			}
 			body{
-			
-				
 				background-color: green;
+			
 			}
 			.obstacle{
 				position:absolute;
-				top: 500px;
-				left:500px;
-				width:150px; 
-				height:470px; 
+				width: 100px;
 				overflow: hidden;
-				background-color: black;
+				background-color: white;
 			}
-			#wall1{
-				top: 500px;
-				left:500px;
+			#walltop1{
+				top:0px;
 			}
-			#wall2{
-				top: 300px;
+			#wallbot1{
+				top:700px;
+			}
+			#walltop2{
+				top:0px;
+			}
+			#wallbot2{
+				top:700px;
+			}
+			.column{
+				
+				height: 100%;
+	
+				position: absolute;
+			}
+			#wrapper1{
+				left:600px;
+			}
+			#wrapper2{
+				
 				left:1000px;
-			}
-			#wall3{
-				top: 500px;
-				left:700px;
+			
 			}
 			
 		</style>
 		
 		<script >
-			function pause(elem, t){
-			//	t = timers;
-				if(elem.value == "Pause"){
-					elem.value = "Resume";
-					for(var i = 0; i < t.length; i++){
-						console.log(t.length);
-						clearInterval(t[i]);
-					
-					}					
-				}else if(elem.value == "Resume"){
-					elem.value = "Pause";
-					startMoving();
-				}
-			}
+			
 			
 			function fall(bdata){
 				
 				var orgSpot = parseInt(getTheStyle(bdata[0].id, 'top'));
 				if(!(bdata[1] == bdata[4])){
-					
+		
 					bdata[1] = bdata[1] + bdata[2];
 					
 					if(bdata[1] >= bdata[4]){
@@ -76,6 +89,20 @@
 				
 
 			}
+			function wallgenertator(wrapperNum){
+				var height1 = (parseInt(Math.random() * 65) + 5);
+				var height2 = 90 - height1;
+			
+				document.getElementById("walltop" + wrapperNum).style.height = height1 + "%";
+				document.getElementById("wallbot" + wrapperNum).style.height = height2 +"%";
+				console.log(height1 + " " + height2);
+			//	document.getElementById("wallbot" + wrapperNum).style.width = "100px";
+				document.getElementById("wallbot" + wrapperNum ).style.top = (100 - height2) + "%" ;
+			
+				
+			}
+			
+		
 			function jump(bdata){
 				
 				resetBirdAngle(bdata[0]);
@@ -89,19 +116,17 @@
 				clearInterval(rotateTimer);
 				birdData[0].style.transform = 'rotate(-60deg)';
 				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
-				timers[2] = rotateTimer;
 			}
 			function getTheStyle(id,styleProperty){
 				var elem = document.getElementById(id);
 				var theCSSprop = window.getComputedStyle(elem,null).getPropertyValue(styleProperty);
-		
 				return theCSSprop;
 			}
 			
 			function handleKeyDown(e) { // *** add missing function calls ***
 				//	document.getElementById('keyDisplay').innerHTML = e.keyCode;//show key code
 				//console.log(e.keyCode);
-				if(e.keyCode == 32 && firstPress && document.getElementById("pauseBut").value == "Pause"){
+				if(e.keyCode == 32 && firstPress){
 					jump(birdData);
 					firstPress = false;
 				}
@@ -118,13 +143,15 @@
 				
 				for(var i = 0; i < obstacles.length; i++){
 					var wallOgLoc = parseInt(getTheStyle(obstacles[i].id,'left'));
-					obstacles[i].style.left = wallOgLoc - 3 + "px";
+					obstacles[i].style.left = wallOgLoc - 4 + "px";
 					if(wallOgLoc - 1 < 0){
 						obstacles[i].style.left = window.innerWidth;
+						wallgenertator(obstacles[i].id.substring(obstacles[i].id.length-1));
 					}
 					
+					
 				}
-			
+				
 			}
 		
 			function rotateObj(obj){
@@ -144,58 +171,60 @@
 			}
 			// 0			,1,					2,					 3		4
 			//bird element, vertical velocity, vertical acceleration, height, terminal velocity 
-			function startMoving(){
-				birdTimer = setInterval(function(){fall(birdData);},25);
-				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("obstacle"));},25);
-				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
-				timers = [birdTimer,wallTimer,rotateTimer];
-			}
-			function initalize(){
+			
+			var birdData = ["bird",-5, 1, 0, 7]; 
+			var birdTimer;
+			var wallTimer
+			var rotateTimer;
+			var firstPress = true;
+			
+			window.onload = function(){
 				birdData[0] = document.getElementById("bird");
 				document.getElementById("myAudio").play();
 				birdData[3] = parseInt(getTheStyle(birdData[0].id, 'top'));
 				clearInterval(birdTimer);
 				birdTimer = setInterval(function(){fall(birdData);},25);
 				clearInterval(wallTimer);
-				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("obstacle"));},25);
+				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("column"));},8);
 				clearInterval(rotateTimer);
 				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
 				window.addEventListener("keydown", handleKeyDown);
 				window.addEventListener("keyup", handleRelease);
-				timers = [birdTimer,wallTimer,rotateTimer];
-			
-			}
-			var birdData = ["bird",-5, 1, 0, 7]; 
-			var birdTimer;
-			var wallTimer
-			var rotateTimer;
-			var firstPress = true;
-			var timers;
-			window.onload = function(){
-				initalize();
-				
-				
+	
+				//wallgenertator();
+				console.log(document.getElementById("wrapper1").style.top);
 			}	
 	
 		</script>
 	</head>
 	
 	<body>
-		<input id = "pauseBut" type = button  value = "Pause" onclick = "pause(this, timers)">
+	
 		<audio id="myAudio">
 			<source src="song.mp3" type="audio/mp3">
 		</audio>
-		<div id = "bird" class = "player" >
+		<div id = "bird" class = "player">
 			<img src = "yellowbird-midflap.png">
 		</div>
-		<div id = "wall1" class = "obstacle">
-			
+		<div id = "wrapper1" class = "column">
+			<div id = "walltop1" class = "obstacle">
+				1
+			</div>
+			<div id = "wallbot1" class = "obstacle">
+				2
+			</div>
 		</div>
-		<div id = "wall2" class = "obstacle">
+		
+		
+		<div id = "wrapper2"  class = "column">
 			
+			<div id = "walltop2" class = "obstacle">
+				3
+			</div>
+			<div id = "wallbot2" class = "obstacle">
+				4
+			</div>
 		</div>
-		<div id = "wall3" class = "obstacle">
-			
-		</div>
+		
 	</body>
 </html>
