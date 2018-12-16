@@ -1,0 +1,256 @@
+<!--increase size when eating a pipe
+-->
+<html>
+	<head>
+		<style>
+			#bird{
+				position:absolute;
+				top: 332px;
+				left:80px;
+				
+				transform: rotate(10deg);
+			}
+			body{
+				background-color: green;
+				overflow: hidden;
+			}
+			.obstacle{
+				position:absolute;
+				width: 100px;
+				overflow: hidden;
+				background-color: white;
+			}
+			#walltop1{
+				top:0px;
+			}
+			#wallbot1{
+				top:700px;
+			}
+			#walltop2{
+				top:0px;
+			}
+			#wallbot2{
+				top:700px;
+			}
+			.column{
+				
+				height: 100%;
+	
+				position: absolute;
+			}
+			#wrapper1{
+				left:600px;
+			}
+			#wrapper2{
+				
+				left:1000px;
+			
+			}
+			#pauseBut{
+				position: absolute;
+			}
+			#floor{
+				top:80%
+				width:100%
+				height:20%
+			}
+		</style>
+		
+		<script >
+			function pause(elem, t){
+			//	t = timers;
+				if(elem.value == "Pause"){
+					elem.value = "Resume";
+					for(var i = 0; i < t.length; i++){
+						console.log(t.length);
+						clearInterval(t[i]);
+					
+					}					
+				}else if(elem.value == "Resume"){
+					elem.value = "Pause";
+					startMoving();
+				}
+			}
+			
+			function fall(bdata){
+				
+				var orgSpot = parseInt(getTheStyle(bdata[0].id, 'top'));
+				if(!(bdata[1] == bdata[4])){
+					
+					bdata[1] = bdata[1] + bdata[2];
+					
+					if(bdata[1] >= bdata[4]){
+						bdata[1] = bdata[4];
+					}
+				}
+			//	console.log(bdata[1]);
+			//	console.log(bdata[1]);
+				
+				bdata[0].style.top = orgSpot + bdata[1] + "px";
+				
+
+			}
+			function jump(bdata){
+				
+				resetBirdAngle(bdata[0]);
+			//	console.log(bdata[1]);
+			 	bdata[1] = -8;
+			//	console.log(birdData[1]);
+			//	console.log(bdata[1]);
+				
+			}
+			function resetBirdAngle(obj){
+				clearInterval(rotateTimer);
+				birdData[0].style.transform = 'rotate(-60deg)';
+				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
+				timers[2] = rotateTimer;
+			}
+			function getTheStyle(id,styleProperty){
+				var elem = document.getElementById(id);
+				var theCSSprop = window.getComputedStyle(elem,null).getPropertyValue(styleProperty);
+		
+				return theCSSprop;
+			}
+			
+			function handleKeyDown(e) { // *** add missing function calls ***
+				//	document.getElementById('keyDisplay').innerHTML = e.keyCode;//show key code
+				//console.log(e.keyCode);
+				if(e.keyCode == 32 && firstPress && document.getElementById("pauseBut").value == "Pause"){
+					jump(birdData);
+					firstPress = false;
+				}
+				onkeydown = null;
+		
+			}
+			
+			function handleRelease(){
+				firstPress = true;
+			}
+			//alec
+			
+			function hitCollision(obstacle){
+            var width1= parseInt(window.getComputedStyle(wall1).getPropertyValue(width));
+            var height1= parseInt(window.getComputedStyle(wall1).getPropertyValue(height));
+            var top1= parseInt(wall1.style.top);
+            var left1= parseInt(wall1.style.left);
+            var width2= parseInt(window.getComputedStyle(wall2).getPropertyValue(width));
+            var height2= parseInt(window.getComputedStyle(wall2).getPropertyValue(height));
+            var top2= parseInt(wall2.style.top);
+            var left2= parseInt(wall2.style.left);
+            var width3= parseInt(window.getComputedStyle(wall3).getPropertyValue(width));
+            var height3= parseInt(window.getComputedStyle(wall3).getPropertyValue(height));
+            var top3= parseInt(wall3.style.top);
+            var left3= parseInt(wall3.style.left);
+            
+            if(bird.right)=(wall1.left && wall1.top)
+			function moveWalls(obstacles){
+				
+				for(var i = 0; i < obstacles.length; i++){
+					var wallOgLoc = parseInt(getTheStyle(obstacles[i].id,'left'));
+					obstacles[i].style.left = wallOgLoc - 4 + "px";
+					if(wallOgLoc - 1 < 0){
+						obstacles[i].style.left = window.innerWidth;
+						wallgenertator(obstacles[i].id.substring(obstacles[i].id.length-1));
+					}
+					
+					
+				}
+				
+			}
+		
+			function rotateObj(obj){
+				obj = birdData[0];
+				var transformProp = obj.style.transform;
+				var ogDeg = parseInt(transformProp.substring(7,transformProp.length-4));
+				var rate = 2;
+				if(ogDeg > 20){
+					rate = 4;
+				}
+				obj.style.transform = 'rotate(' + (ogDeg + rate) + 'deg)';
+				if(ogDeg + rate >45){
+				//	console.log(ogDeg);
+					clearInterval(rotateTimer);
+				}
+				
+			}
+			function wallgenertator(wrapperNum){
+				var height1 = (parseInt(Math.random() * 65) + 5);
+				var height2 = 90 - height1;
+			
+				document.getElementById("walltop" + wrapperNum).style.height = height1 + "%";
+				document.getElementById("wallbot" + wrapperNum).style.height = height2 +"%";
+				console.log(height1 + " " + height2);
+			//	document.getElementById("wallbot" + wrapperNum).style.width = "100px";
+				document.getElementById("wallbot" + wrapperNum ).style.top = (100 - height2) + "%" ;
+			
+				
+			}
+			// 0			,1,					2,					 3		4
+			//bird element, vertical velocity, vertical acceleration, height, terminal velocity 
+			function startMoving(){
+				birdTimer = setInterval(function(){fall(birdData);},25);
+				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("column"));},25);
+				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
+				timers = [birdTimer,wallTimer,rotateTimer];
+			}
+			function initalize(){
+				birdData[0] = document.getElementById("bird");
+				document.getElementById("myAudio").play();
+				birdData[3] = parseInt(getTheStyle(birdData[0].id, 'top'));
+				clearInterval(birdTimer);
+				birdTimer = setInterval(function(){fall(birdData);},25);
+				clearInterval(wallTimer);
+				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("column"));},8);
+				clearInterval(rotateTimer);
+				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
+				window.addEventListener("keydown", handleKeyDown);
+				window.addEventListener("keyup", handleRelease);
+				timers = [birdTimer,wallTimer,rotateTimer];
+			
+			}
+			var birdData = ["bird",-5, 1, 0, 7]; 
+			var birdTimer;
+			var wallTimer
+			var rotateTimer;
+			var firstPress = true;
+			var timers;
+			window.onload = function(){
+				initalize();
+				
+				
+			}	
+	
+		</script>
+	</head>
+	
+	<body>
+		<input id = "pauseBut" type = button  value = "Pause" onclick = "pause(this, timers)">
+				<audio id="myAudio">
+			<source src="song.mp3" type="audio/mp3">
+		</audio>
+		<div id = "bird" class = "player">
+			<img src = "yellowbird-midflap.png">
+		</div>
+		<div id = "wrapper1" class = "column">
+			<div id = "walltop1" class = "obstacle">
+				1
+			</div>
+			<div id = "wallbot1" class = "obstacle">
+				2
+			</div>
+		</div>
+		
+		
+		<div id = "wrapper2"  class = "column">
+			
+			<div id = "walltop2" class = "obstacle">
+				3
+			</div>
+			<div id = "wallbot2" class = "obstacle">
+				4
+			</div>
+		</div>
+			
+		</div>
+	</body>
+</html>
