@@ -3,13 +3,66 @@
 <html>
 	<head>
 		<style>
+			#header{
+				border-style: dotted;
+				border-width: 5px;
+				background-color: blue;
+				text-align: center;
+				border-radius: 30px;
+				font-size: 100px;
+				padding:20px;
+			}
+			#birdText{
+				font-family: ;
+				color: yellow;
+				font-size: 100px;
+			}
+			#birdGif{
+				float: left;
+				
+			}
+			
+			#alec{
+				display: none;
+			}	
+			#birdGif2{
+			float: right;
+			}			
 			#bird{
 				position:absolute;
 				top: 332px;
 				left:80px;
-				
 				transform: rotate(10deg);
 			}
+		#startButton{
+			top: 500px;
+			left: 850px;
+			position:absolute;
+			width: 200px;
+			height:100px;
+			background-color: red;
+		}
+		#settingsButton{
+			top: 600px;
+			left: 850px;
+			position:absolute;
+			width: 200px;
+			height:100px;
+			background-color: red;			
+		}	
+		
+		#scoreButton{
+			top: 700px;
+			left: 850px;
+			position:absolute;
+			width: 200px;
+			height:100px;
+			background-color: red;						
+		}
+		#startInterface{
+			background-color: green;
+		}				
+			
 			body{
 				background-color: green;
 				overflow: hidden;
@@ -43,7 +96,7 @@
 			}
 			#wrapper2{
 				
-				left:1000px;
+				left:1400px;
 			
 			}
 			#pauseBut{
@@ -81,15 +134,14 @@
 			//	console.log(bdata[1]);
 			//	console.log(bdata[1]);
 				
-				bdata[0].style.top = orgSpot + bdata[1] + "px";
+				bdata[0].style.top =7+orgSpot + bdata[1] + "px";
 				
-
 			}
 			function jump(bdata){
 				
 				resetBirdAngle(bdata[0]);
 			//	console.log(bdata[1]);
-			 	bdata[1] = -8;
+			 	bdata[1] = -18;
 			//	console.log(birdData[1]);
 			//	console.log(bdata[1]);
 				
@@ -128,7 +180,7 @@
 				
 				for(var i = 0; i < obstacles.length; i++){
 					var wallOgLoc = parseInt(getTheStyle(obstacles[i].id,'left'));
-					obstacles[i].style.left = wallOgLoc - 4 + "px";
+					obstacles[i].style.left = wallOgLoc - 5 + "px";
 					if(wallOgLoc - 1 < 0){
 						obstacles[i].style.left = window.innerWidth;
 						wallgenertator(obstacles[i].id.substring(obstacles[i].id.length-1));
@@ -175,36 +227,47 @@
 				timers = [birdTimer,wallTimer,rotateTimer];
 			}
 			function initalize(){
-				birdData[0] = document.getElementById("bird");
-				document.getElementById("myAudio").play();
-				birdData[3] = parseInt(getTheStyle(birdData[0].id, 'top'));
-				clearInterval(birdTimer);
-				birdTimer = setInterval(function(){fall(birdData);},25);
-				clearInterval(wallTimer);
-				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("column"));},8);
-				clearInterval(rotateTimer);
-				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
-				window.addEventListener("keydown", handleKeyDown);
-				window.addEventListener("keyup", handleRelease);
-				timers = [birdTimer,wallTimer,rotateTimer];
-			
-			}
+				
+					birdData[0] = document.getElementById("bird");
+					document.getElementById("myAudio").play();
+					birdData[3] = parseInt(getTheStyle(birdData[0].id, 'top'));
+					clearInterval(birdTimer);
+					birdTimer = setInterval(function(){fall(birdData);},25);
+					clearInterval(wallTimer);
+					wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("column"));},8);
+					clearInterval(rotateTimer);
+					rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
+					window.addEventListener("keydown", handleKeyDown);
+					window.addEventListener("keyup", handleRelease);
+					timers = [birdTimer,wallTimer,rotateTimer];
+			}	
 			var birdData = ["bird",-5, 1, 0, 7]; 
 			var birdTimer;
 			var wallTimer
 			var rotateTimer;
 			var firstPress = true;
 			var timers;
-			window.onload = function(){
-				initalize();
-				
-				
+			
+			function start(){
+					document.getElementById('startInterface').style.display = 'none';
+					document.getElementById('alec').style.display= "block";
+					initalize();
+
+			
 			}	
 	
 		</script>
 	</head>
 	
 	<body>
+		
+	<div id="startInterface">
+		<div id="header"><span id="birdGif" class="buttons"><img src="flappy1.gif"></span>The Flappy <span id="birdText">Bird</span> Game<span id="birdGif2" class="birds"><img src="flappy1.gif"></span> </div>
+		<input id="startButton" class="buttons" type="button" value=" Start " onclick="start()"></input>
+		<input id="settingsButton" class="buttons" type="button" value=" Scores " onclick="start()"></input>
+		<input id="scoreButton" class="buttons" type="button" value=" Settings " onclick="start()"></input>
+	</div>	
+	<div id="alec">
 		<input id = "pauseBut" type = button  value = "Pause" onclick = "pause(this, timers)">
 				<audio id="myAudio">
 			<source src="song.mp3" type="audio/mp3">
@@ -232,6 +295,8 @@
 			</div>
 		</div>
 			
-		</div>
+		
+	</div>	
+	</div>
 	</body>
 </html>
