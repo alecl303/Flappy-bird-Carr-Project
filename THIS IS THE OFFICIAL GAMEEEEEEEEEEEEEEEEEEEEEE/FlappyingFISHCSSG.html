@@ -1,0 +1,453 @@
+<!--increase size when eating a pipe
+-->
+<html>
+	<title> FLAPPY FISHIES</title>
+	<head>
+		<style>
+			#header{
+				border-style: dotted;
+				border-width: 5px;
+				background-color: blue;
+				text-align: center;
+				border-radius: 30px;
+				font-size: 100px;
+				padding:20px;
+			}
+			#birdText{
+				font-family: ;
+				color: yellow;
+				font-size: 100px;
+			}
+			#birdGif{
+				float: left;
+			}
+			#inface{
+				display: none;
+			}	
+			#birdGif2{
+			float: right;
+			}			
+			#bird{
+				position:absolute;
+				top: 332px;
+				left:80px;
+				transform: rotate(10deg);
+			}
+			#startButton{
+				top: 500px;
+				left: 850px;
+				position:absolute;
+				width: 200px;
+				height:100px;
+				background-color: red;
+			}
+			#settingsButton{
+				top: 600px;
+				left: 850px;
+				position:absolute;
+				width: 200px;
+				height:100px;
+				background-color: red;			
+			}	
+			#scoreButton{
+				top: 700px;
+				left: 850px;
+				position:absolute;
+				width: 200px;
+				height:100px;
+				background-color: red;						
+			}
+			#startInterface{
+				background-color: green;
+			}				
+			body{
+				background-image: url("background.gif");
+				overflow: hidden;
+				background-repeat:no-repeat;
+			}
+			.obstacle{
+				position:absolute;
+				width: 100px;
+				overflow: hidden;
+				background-color: white;
+			    background-image: url("stick3.png");
+			}
+			#walltop1{
+				top:0px;
+				height: 40%;
+			}	
+			#wallbot1{
+				top:700px;
+				height:40%
+			}
+			#walltop2{
+				top:0px;
+				height: 30%;
+			}
+			#wallbot2{
+				top:700px;
+				height: 20%;
+			}
+			.column{
+				height: 100%;
+				width: 100px;
+				position: absolute;
+			}
+			#wrapper1{
+				left:600px;
+			}
+			#wrapper2{
+				left:1200px;
+			}
+			#pauseBut{
+				position: absolute;
+			}
+			#s{
+				color:pink;
+				font-size:80px;
+				border:dotted yellow 10px;
+				float:right;
+			}
+			#guidelines{
+				display:none;
+				color:white;
+				font-size:40px;
+				float:left
+				border:white dotted 5px;
+				background-color:black;
+			}
+			#red{
+				font-size:80px;
+				color:red;
+				background-color:yellow;
+				}
+			table {
+  				border-collapse: collapse;
+ 				width: 100%;
+ 			#everybody{
+ 				display:none;
+ 				font-size:20px;
+ 				float:left;
+ 				color:gray;
+ 			}
+ 			table, td, th {
+  				border: 10px solid black;
+			}
+		</style>
+		
+		<script>
+			function hitCollision(){
+				
+				var obstacles = document.getElementsByClassName("column");
+				var walls = document.getElementsByClassName("obstacle");
+				var birdHeight = parseInt(getTheStyle(birdData[0].id, "height"));
+			
+				var birdLeft = parseInt(getTheStyle(birdData[0].id, "left"));
+				var birdTop = parseInt(getTheStyle(birdData[0].id,"top"));
+				var birdWidth = parseInt(getTheStyle(birdData[0].id,"width"));
+				for(var i=0;i<obstacles.length;i++){
+					var temp = obstacles[i].id;
+				//	if(obstacles[i].id.substring(0,obstacles[i].length-1) == "wallTop"){
+				//		var wallTop = parseInt(getTheStyle(obstacles{[i].id, "top"));
+						
+				//	}
+				
+					var wallLeft = parseInt(getTheStyle(temp, "left"));
+					var wb = parseInt(getTheStyle("walltop" + (i+1), "height"));
+					var wt = parseInt(getTheStyle("wallbot" + (i+1), "top"));
+				//	console.log(wb + "-" + wt);
+				//	console.log("wb" + (getTheStyle("wallbot" + (i+1), "top")));
+				//	console.log(checkIfInsideH(birdLeft, birdWidth, parseInt(getTheStyle(temp, "left")), parseInt(getTheStyle(temp, "width"))));
+					console.log((checkIfInsideV(birdTop, birdHeight, wb,wt)));
+					if(checkIfInsideH(birdLeft, birdWidth, parseInt(getTheStyle(temp, "left")), parseInt(getTheStyle(temp, "width"))) && (checkIfInsideV(birdTop, birdHeight, wb,wt))) {
+						
+						pause(document.getElementById("pauseBut"),timers);
+						alert("You lose !!!!! Your score is "+score+" inches");
+						
+					}
+				}
+			
+			}
+			//bt - b top,
+			function checkIfInsideH(bL,bw,objL,objw){
+			//	console.log((bl + bw) + "-" + objl);
+				
+				
+				if(bL + bw > objL && bL + bw < objL + objw ){
+					return true;
+					
+				}
+				return false;
+			
+			}
+						//bt - b top,
+			function checkIfInsideV(bt,bh,objb,objt){
+			//	console.log(objt + " > " + bt);
+			//	console.log(bt + " < " + objb);
+				if(bt + bh > objt + 15  ||  bt < objb - 15){
+					return true;
+				}
+				return false;
+			
+			}
+			function fall(bdata){
+		/*This function is the Force of gravity on the bird , when the space bar is not press the bird doesn't jump 
+		and falls straight to the ground*/
+				var orgSpot = parseInt(getTheStyle(bdata[0].id, 'top'));
+				if(!(bdata[1] == bdata[4])){
+					
+					bdata[1] = bdata[1] + bdata[2];
+					
+					if(bdata[1] >= bdata[4]){
+						bdata[1] = bdata[4];
+					}
+				}
+			//	console.log(bdata[1]);
+			//	console.log(bdata[1]);
+				hitCollision();
+				
+				bdata[0].style.top =7+orgSpot + bdata[1] + "px";
+				
+			}
+		//This function handles what to do if the Pause/Resume button is pressed.
+			function pause(elem, t){
+			//	t = timers;
+				if(elem.value == "Pause"){
+					elem.value = "Resume";
+					for(var i = 0; i < t.length; i++){
+						console.log(t.length);
+						clearInterval(t[i]);
+					
+					}					
+				}else if(elem.value == "Resume"){
+					elem.value = "Pause";
+					startMoving();
+				}
+			}
+			
+		
+			//This makes the bird jump higher from its previous postion
+			function jump(bdata){
+				
+				resetBirdAngle(bdata[0]);
+			//	console.log(bdata[1]);
+			 	bdata[1] = -18;
+			//	console.log(birdData[1]);
+			//	console.log(bdata[1]);
+				
+			}
+			/*This function cause the bird to be at its original angle(position) */
+			function resetBirdAngle(obj){
+				clearInterval(rotateTimer);
+				birdData[0].style.transform = 'rotate(-60deg)';
+				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
+				timers[2] = rotateTimer;
+			}
+			//This gets the style so we could change its height properties
+			function getTheStyle(id,styleProperty){
+				var elem = document.getElementById(id);
+				var theCSSprop = window.getComputedStyle(elem,null).getPropertyValue(styleProperty);
+		
+				return theCSSprop;
+			}
+			/*This function translates key presses to function calls for the jump(birdData) function*/
+			function handleKeyDown(e) { // *** add missing function calls ***
+				//	document.getElementById('keyDisplay').innerHTML = e.keyCode;//show key code
+				//console.log(e.keyCode);
+				if(e.keyCode == 32 && firstPress && document.getElementById("pauseBut").value == "Pause"){
+					jump(birdData);
+					firstPress = false;
+				}
+				onkeydown = null;
+		
+			}
+			
+			function handleRelease(){
+				firstPress = true;
+			}
+			//inface
+			
+		//This function moves the wall back to the start with a different value.	
+			function moveWalls(obstacles){
+				for(var i = 0; i < obstacles.length; i++){
+					var wallOgLoc = parseInt(getTheStyle(obstacles[i].id,'left'));
+					obstacles[i].style.left = wallOgLoc - 5 + "px";
+					score++;
+					document.getElementById("s").innerHTML=score+"inches";
+					if(wallOgLoc - 1 < 0){
+						obstacles[i].style.left = window.innerWidth;
+						wallgenertator(obstacles[i].id.substring(obstacles[i].id.length-1));
+					}
+				}
+			}
+		//This function rotates the bird to simulate the effect of flying up when pressing space.
+			function rotateObj(obj){
+				obj = birdData[0];
+				var transformProp = obj.style.transform;
+				var ogDeg = parseInt(transformProp.substring(7,transformProp.length-4));
+				var rate = 2;
+				if(ogDeg > 20){
+					rate = 4;
+				}
+				obj.style.transform = 'rotate(' + (ogDeg + rate) + 'deg)';
+				if(ogDeg + rate >45){
+				//	console.log(ogDeg);
+					clearInterval(rotateTimer);
+				}
+				
+			}
+		//This function generates the walls with gaps. This makes the gaps always the same value.	
+			function wallgenertator(wrapperNum){
+				var height1 = (parseInt(Math.random() * 65) + 5);
+				var height2 = 75 - height1;
+			
+				document.getElementById("walltop" + wrapperNum).style.height = height1 + "%";
+				document.getElementById("wallbot" + wrapperNum).style.height = height2 +"%";
+				console.log(height1 + " " + height2);
+			//	document.getElementById("wallbot" + wrapperNum).style.width = "100px";
+				document.getElementById("wallbot" + wrapperNum ).style.top = (100 - height2) + "%" ;
+			
+				
+			}
+			// 0			,1,					2,					 3		4
+			//bird element, vertical velocity, vertical acceleration, height, terminal velocity 
+			function startMoving(){
+				birdTimer = setInterval(function(){fall(birdData);},25);
+				wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("column"));},25);
+				rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
+				timers = [birdTimer,wallTimer,rotateTimer];
+			}
+		//This function resets and puts back the bird in its original position. This function is also responsible for having the bird and walls move.
+			function initalize(){
+					document.getElementById("guidelines").style.display="none";
+					birdData[0] = document.getElementById("bird");
+					document.getElementById("myAudio").play();
+					birdData[3] = parseInt(getTheStyle(birdData[0].id, 'top'));
+					clearInterval(birdTimer);
+					birdTimer = setInterval(function(){fall(birdData);},25);
+					clearInterval(wallTimer);
+					wallTimer = setInterval(function(){moveWalls(document.getElementsByClassName("column"));},8);
+					clearInterval(rotateTimer);
+					rotateTimer = setInterval(function(){rotateObj(birdData[0]);},10);
+					window.addEventListener("keydown", handleKeyDown);
+					window.addEventListener("keyup", handleRelease);
+					timers = [birdTimer,wallTimer,rotateTimer];
+			}	
+			var birdData = ["bird",-5, 1, 0, 7]; 
+			var birdTimer;
+			var wallTimer
+			var rotateTimer;
+			var firstPress = true;
+			var timers;
+			var score=0
+			var keepGoing=true; 
+			
+// This is a function that makes the interface disappear and calls the function initialize.	
+			function start(){
+					//document.body.style.backgroundImage.display="none";
+					document.body.style.backgroundImage = "url('1ynd.gif')";
+					document.getElementById("opening").pause();
+					document.getElementById('startInterface').style.display = 'none';
+					document.getElementById('inface').style.display= "block";
+					initalize();
+			}
+//These function menu and disappear causes a div to appear/disappear.
+			function menu(){
+				document.getElementById("guidelines").style.display="block";
+			}
+			function disappear(){
+				document.getElementById("guidelines").style.display="none";
+			}
+// These function menu and disappear causes a div to appear/disappear.			
+			function scoreboard(){
+				document.getElementById("everybody").style.display="block";
+			}
+			function goaway(){
+				document.getElementById("opening").play(); 
+				document.getElementById("everybody").style.display="none";
+			}
+//This function just reloads the document
+			function reload() {
+  				location.reload();
+  				
+			}
+		</script>
+	</head>
+	
+	<body>
+		
+	<div id="startInterface">
+		<div id="header"><span id="birdGif" class="buttons"><img src="flappy1.gif"></span>The Flappy <span id="birdText">Bird</span> Game<span id="birdGif2" class="birds"><img src="flappy1.gif"></span> </div>
+		<input id="startButton" class="buttons" type="button" value=" Start " onclick="start()"></input>
+		<input id="settingsButton" class="buttons" type="button" value=" Settings " onclick="menu()" ></input>
+		<input id="scoreButton" class="buttons" type="button" value=" Scores " onclick="scoreboard()"></input>
+		<div id="guidelines" onclick="disappear()"> This is a simple game where you play as<span id="red"> Magikarp</span> and you try to dodge wooden sticks. The
+		background music is a korean song that the creators do not know about. </div>
+		<audio id="opening">
+			<source src="Nintendo Wii - Mii Channel - Plaza Music (Extended) HD.mp3" type="audio/mp3">
+		</audio>
+		<table  id="everybody" onclick="goaway()">
+  		<tr>
+  			<th colspan=2> Leader Board </th>
+ 		</tr>
+  			<th>Participants</th>
+  			<th>Score</th>
+  			
+  		<tr>
+   			<td>Alec</td>
+    		<td>1,0000,0000inches</td>
+			
+  		</tr>
+  		<tr>
+  			<td>Nathan</td>
+    		<td>9000inches</td>
+    		<td></td>
+    		<td></td>
+    	</tr>
+    	<tr>
+  			<td>Hibin</td>
+    		<td>100inches</td>
+    	</tr>
+    	<tr>
+  			<td>Matt</td>
+    		<td>1inches</td>
+    	</tr>
+		</table>
+		
+		
+	</div>	
+	<div id="inface">
+		<input id="again??" type="button" onclick="reload()" value ="Play Again??"> </input>
+		<div id="s" value="score">0</div>
+		<input id = "pauseBut" type = button  value = "Pause" onclick = "pause(this, timers)">
+				<audio id="myAudio">
+			<source src="song.mp3" type="audio/mp3">
+		</audio>
+		<div id = "bird" class = "player">
+			<img src = "rag.png">
+		</div>
+		<div id = "wrapper1" class = "column">
+			<div id = "walltop1" class = "obstacle">
+				1
+			</div>
+			<div id = "wallbot1" class = "obstacle">
+				2
+			</div>
+		</div>
+		
+		
+		<div id = "wrapper2"  class = "column">
+			
+			<div id = "walltop2" class = "obstacle">
+				3
+			</div>
+			<div id = "wallbot2" class = "obstacle">
+				
+			</div>
+		</div>
+			
+		
+	</div>	
+	</div>
+	</body>
+</html>
