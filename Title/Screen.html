@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<style>
+		.button {
+			background-color: #0099CC;
+			background: transparent;
+			border-radius: 6px; 
+			border: 2px solid #0099CC;
+			color:black;
+  			padding: 32px 32px;
+  			text-decoration: none;
+  			display: inline-block;
+  			font-size: 16px;
+  			margin: 4px 4px;
+		}
+		.button:hover {
+      		background-color: #008CBA;
+      		color: white;
+ 		}
+		#buttons{
+			position:absolute;
+			left:45%;
+			top:40%;
+			text-align:center;
+		}
+		#title{
+			text-align:center;
+			font-size:100px;
+			font-family:impact;
+			background: -webkit-linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+  			-webkit-background-clip: text;
+  			-webkit-text-fill-color: transparent;
+  			
+		}
+		body  {
+  			background-image: url("https://i.pinimg.com/originals/fd/e7/b7/fde7b7bf3f5cba458f3003440333685d.jpg");
+  			background-color: #cccccc;
+		}
+		.center {
+  			display: block;
+  			margin-left: auto;
+  			margin-right: auto;
+ 			width: 50%;
+		}
+		</style>
+		<script>
+		function initalize(){
+			document.getElementById("startup").play();
+		}
+		window.onload = function(){
+				initalize();
+		}	
+		</script>
+	</head>
+	<body>
+		<audio id="startup">
+			<source src="Nintendo Wii - Mii Channel - Plaza Music (Extended) HD.mp3" type="audio/mp3">
+		</audio>
+		<div id="title"> Flappy Bird </div>
+			<img src="animation.gif" class="center">
+		<div id="buttons">
+			<input type="button" value="Start Game" onclick="msg()" class="button">
+			</br>
+		<input type="button" value="Option" onclick="msg()" class="button">
+			</div>
+	</body>
+</html>
